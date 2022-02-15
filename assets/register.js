@@ -45,36 +45,73 @@ function validateForm(){
     }
 }
 
-function storeFormData(){
-    const user ={
-        name: form.name.value,
-        phone: form.phone.value,
-        email: form.email.value,
-        age: form.age.value,
-        weight: form.weight.value,
-        height: form.height.value,
-        password: form.password.value
-    };
+// Making this function async to improve security and post to database
+// function storeFormData(){
+//     const user ={
+//         name: form.name.value,
+//         phone: form.phone.value,
+//         email: form.email.value,
+//         age: form.age.value,
+//         weight: form.weight.value,
+//         height: form.height.value,
+//         password: form.password.value
+//     };
 
-//Do something with user data here
-    console.log(user)
-}
+// //Do something with user data here
+//     console.log(user)
+// }
 
+const signupNewUser = async (e) =>{
+     e.preventDefault();
 
-function processFormData(e){
-    e.preventDefault();
-    
-    // validate form function
-    validateForm();
+     validateForm();
 
-    //submit data if valid 
-    if(isValid && passwordsMatch){
-        storeFormData();
+     if(isValid && passwordsMatch){
+
+     const user = {
+                user_name: form.name.value,
+                phone: form.phone.value,
+                email: form.email.value,
+                age: form.age.value,
+                weight: form.weight.value,
+                height: form.height.value,
+                password: form.password.value
+            }
+
+    if (user){
+        const response = await fetch('/api/users/register',{
+            method:'POST',
+            body: JSON.stringify({user_name:}, phone, email, age, weight, height, password}),
+            headers: {'Content-Type' : 'application/json'},
+        });
+
+        if (response.ok) {
+            document.location.replace('/');
+        } else {
+            alert ('Failed to sign up.');
+        }
     }
+}};
+
+
+
+// old function to capture data from form
+// function processFormData(e){
+//     e.preventDefault();
     
-}
+//     // validate form function
+//     validateForm();
+
+//     //submit data if valid 
+//     if(isValid && passwordsMatch){
+//         // storeFormData();
+//     }
+    
+// }
 
 //Event listener
-form.addEventListener('submit', processFormData);
+// form.addEventListener('submit', processFormData);
+
+document.querySelector('form').addEventListener('click', signupNewUser);
 
 
